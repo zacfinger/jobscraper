@@ -22,13 +22,35 @@ url = 'https://www.indeed.com/jobs?q='+query+'&l='+location
 response = requests.get(url)
 soup = BeautifulSoup(response.text, "html.parser")
 
-# Find all class matching 'jobsearch-SerpJobCard unifiedRow row result clickcard'
-mydivs = soup.findAll("a", {"class": "jobtitle turnstileLink"})
+# Find all class matching job results
+mydivs = soup.findAll("div", {"class": "jobsearch-SerpJobCard unifiedRow row result"})
 
-#print(soup)
+jobs = []
 
 for div in mydivs:
-	print(div['title'])
+	
+	job = {}
+
+	# https://stackoverflow.com/questions/6287529/how-to-find-children-of-nodes-using-beautifulsoup
+	links = div.findChildren("a", {"class": "jobtitle turnstileLink"})
+	
+	for link in links:
+		# https://stackoverflow.com/questions/2612548/extracting-an-attribute-value-with-beautifulsoup
+		job["title"] = link["title"]
+		job["href"] = link["href"]
+
+	spans = div.findChildren("span", {"class": "company"})
+
+	for span in spans:
+		# https://stackoverflow.com/questions/22003302/beautiful-soup-just-get-the-value-inside-the-tag
+		companies = span.findChildren("a", {"class": "turnstileLink"})
+		if(len(companies) >= 1):
+			job["company"] = companies[0].string
+		else:
+			job["company"] = span.string
+
+	jobs.append(job)
+
 
 def send_email():
 	# https://stackoverflow.com/questions/17759860/python-2-smtpserverdisconnected-connection-unexpectedly-closed/33121151
