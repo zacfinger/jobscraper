@@ -12,10 +12,10 @@ from email.mime.text import MIMEText
 import credentials
 
 # Declare search parameters
-#query = 'sales'
-#location = 'San+Francisco%2C+CA'
-query = 'web+developer'
-location = '85718'
+query = 'sales'
+location = 'San+Francisco%2C+CA'
+#query = 'web+developer'
+#location = '85718'
 
 # https://towardsdatascience.com/how-to-web-scrape-with-python-in-4-minutes-bc49186a8460
 url = 'https://www.indeed.com/jobs?q='+query+'&l='+location
@@ -37,13 +37,14 @@ for div in mydivs:
 	for link in links:
 		# https://stackoverflow.com/questions/2612548/extracting-an-attribute-value-with-beautifulsoup
 		job["title"] = link["title"]
-		job["href"] = link["href"]
+		job["href"] = "https://indeed.com" + link["href"]
 
 	spans = div.findChildren("span", {"class": "company"})
 
 	for span in spans:
 		# https://stackoverflow.com/questions/22003302/beautiful-soup-just-get-the-value-inside-the-tag
-		companies = span.findChildren("a", {"class": "turnstileLink"})
+		#companies = span.findChildren("a", {"class": "turnstileLink"})
+		companies = span.findChildren()
 		if(len(companies) >= 1):
 			job["company"] = companies[0].string
 		else:
@@ -51,6 +52,20 @@ for div in mydivs:
 
 	jobs.append(job)
 
+html = ""
+
+for job in jobs:
+	html += "<p>"
+	html += "<strong><a href=\""
+	html += job["href"] + "\">"
+	html += job["title"] + "</a></strong>"
+	if(job["company"]):
+		html += "<ul><li><small>" + job["company"] + "</small></li></ul>"
+	else:
+		print(job["title"])
+	html += "</p><hr />"
+
+print(jobs)
 
 def send_email():
 	# https://stackoverflow.com/questions/17759860/python-2-smtpserverdisconnected-connection-unexpectedly-closed/33121151
@@ -61,7 +76,7 @@ def send_email():
 	msg['To'] = credentials.sender
 
 	# Create the body of the message (a plain-text and an HTML version).
-	html = soup
+	#html = soup
 
 	# Record the MIME types of both parts - text/plain and text/html.
 	part2 = MIMEText(html, 'html')
@@ -84,5 +99,7 @@ def send_email():
 	# and message to send - here it is sent as one string.
 	s.sendmail(credentials.sender, credentials.recipient, msg.as_string())
 	s.quit()
+
+send_email()
 
 print("\nSuccess")
