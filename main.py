@@ -5,6 +5,8 @@
 
 import webscraper
 import send_email
+import json
+import credentials
 
 print("Executing ...")
 
@@ -25,11 +27,17 @@ try:
     jobs += webscraper.scrape_indeed(query, location)
 
     # Send email report
-    send_email.send_job_report(jobs, query, location)
+    # send_email.send_job_report(jobs, query, location)
 
-    # eventually need to output to JSON file
+    # Save local JSON data file
     # https://realpython.com/python-json/#encoding-and-decoding-custom-python-objects
-    # https://www.google.com/search?client=ubuntu&channel=fs&q=create+json+python3&ie=utf-8&oe=utf-8
+    with open(credentials.json_path + "jobs.json", "w") as write_file:
+        json.dump(jobs, write_file)
+
+    # Eventually need to append to JSON file 
+    # https://www.google.com/search?client=ubuntu&channel=fs&q=python+append+to+json+file&ie=utf-8&oe=utf-8
+    # https://www.geeksforgeeks.org/append-to-json-file-using-python/
+    # https://kite.com/python/answers/how-to-append-to-a-json-file-in-python
 
     print("Success")
 
