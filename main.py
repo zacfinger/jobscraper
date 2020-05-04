@@ -1,6 +1,7 @@
 # Author: zacfinger.com
-# Date: 2020-01-03
+# Date: 2020 Q1/Q2
 # Title: Jobscraper
+####################
 
 import requests
 import urllib.request
@@ -11,63 +12,65 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import credentials
 
-# Declare search parameters
-query = 'sales'
-location = 'San+Francisco%2C+CA'
-#query = 'web+developer'
-#location = '85718'
+### Scrape Indeed.com ###
+### Return Dict object ###
+def scrape_indeed():
 
-# https://towardsdatascience.com/how-to-web-scrape-with-python-in-4-minutes-bc49186a8460
-url = 'https://www.indeed.com/jobs?q='+query+'&l='+location
-response = requests.get(url)
-soup = BeautifulSoup(response.text, "html.parser")
+	jobs = []
 
-# Find all class matching job results
-mydivs = soup.findAll("div", {"class": "jobsearch-SerpJobCard unifiedRow row result"})
+	# https://towardsdatascience.com/how-to-web-scrape-with-python-in-4-minutes-bc49186a8460
+	url = 'https://www.indeed.com/jobs?q='+query+'&l='+location
+	response = requests.get(url)
+	soup = BeautifulSoup(response.text, "html.parser")
 
-jobs = []
+	# Find all class matching job results
+	mydivs = soup.findAll("div", {"class": "jobsearch-SerpJobCard unifiedRow row result"})
 
-for div in mydivs:
-	
-	job = {}
+	for div in mydivs:
+		
+		job = {}
 
-	# https://stackoverflow.com/questions/6287529/how-to-find-children-of-nodes-using-beautifulsoup
-	links = div.findChildren("a", {"class": "jobtitle turnstileLink"})
-	
-	for link in links:
-		# https://stackoverflow.com/questions/2612548/extracting-an-attribute-value-with-beautifulsoup
-		job["title"] = link["title"]
-		job["href"] = "https://indeed.com" + link["href"]
+		# https://stackoverflow.com/questions/6287529/how-to-find-children-of-nodes-using-beautifulsoup
+		links = div.findChildren("a", {"class": "jobtitle turnstileLink"})
+		
+		for link in links:
+			# https://stackoverflow.com/questions/2612548/extracting-an-attribute-value-with-beautifulsoup
+			job["title"] = link["title"]
+			job["href"] = "https://indeed.com" + link["href"]
 
-	spans = div.findChildren("span", {"class": "company"})
+		spans = div.findChildren("span", {"class": "company"})
 
-	for span in spans:
-		# https://stackoverflow.com/questions/22003302/beautiful-soup-just-get-the-value-inside-the-tag
-		#companies = span.findChildren("a", {"class": "turnstileLink"})
-		companies = span.findChildren()
-		if(len(companies) >= 1):
-			job["company"] = companies[0].string
-		else:
-			job["company"] = span.string
+		for span in spans:
+			# https://stackoverflow.com/questions/22003302/beautiful-soup-just-get-the-value-inside-the-tag
+			#companies = span.findChildren("a", {"class": "turnstileLink"})
+			companies = span.findChildren()
+			if(len(companies) >= 1):
+				job["company"] = companies[0].string
+			else:
+				job["company"] = span.string
 
-	jobs.append(job)
+		jobs.append(job)
 
-html = ""
+	return jobs
 
-for job in jobs:
-	html += "<p>"
-	html += "<strong><a href=\""
-	html += job["href"] + "\">"
-	html += job["title"] + "</a></strong>"
-	if(job["company"]):
-		html += "<ul><li><small>" + job["company"] + "</small></li></ul>"
-	else:
-		print(job["title"])
-	html += "</p><hr />"
-
-print(jobs)
-
+# Create HTML body of email
+# Send email
 def send_email():
+
+	# Construct email body in HTML
+	html = ""
+
+	for job in jobs:
+		html += "<p>"
+		html += "<strong><a href=\""
+		html += job["href"] + "\">"
+		html += job["title"] + "</a></strong>"
+		if(job["company"]):
+			html += "<ul><li><small>" + job["company"] + "</small></li></ul>"
+		else:
+			print(job["title"])
+		html += "</p><hr />"
+
 	# https://stackoverflow.com/questions/17759860/python-2-smtpserverdisconnected-connection-unexpectedly-closed/33121151
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')
@@ -100,6 +103,13 @@ def send_email():
 	s.sendmail(credentials.sender, credentials.recipient, msg.as_string())
 	s.quit()
 
+# Declare search parameters
+query = 'developer'
+#location = 'San+Francisco%2C+CA'
+#query = 'web+developer'
+location = '85719'
+
+jobs = scrape_indeed()
 send_email()
 
 print("\nSuccess")
