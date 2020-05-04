@@ -6,23 +6,34 @@ from bs4 import BeautifulSoup
 def query_HN_jobs():
 
     job_ids = []
+    jobs = []
 
     # https://www.digitalocean.com/community/tutorials/how-to-use-web-apis-in-python-3
     # https://github.com/HackerNews/API
-    api_url = 'https://hacker-news.firebaseio.com/v0/jobstories.json'
+    api_job_url = 'https://hacker-news.firebaseio.com/v0/jobstories.json'
     headers = {'Content-Type': 'application/json'}
 
-    response = requests.get(api_url, headers=headers)
+    response = requests.get(api_job_url, headers=headers)
 
     if response.status_code == 200:
         job_ids = json.loads(response.content.decode('utf-8'))
     else:
         print(response.status_code)
     
-    for id in job_ids:
-        print(id)
+    for job_id in job_ids:
+        job = {}
 
-    return []
+        api_url = 'https://hacker-news.firebaseio.com/v0/item/{0}.json'
+        response = requests.get(api_url.format(job_id), headers=headers)
+        job_post = json.loads(response.content.decode('utf-8'))
+        
+        if("title" in job_post and "by" in job_post and "url" in job_post):
+            job["title"] = job_post["title"]
+            job["company"] = job_post["by"]
+            job["href"] = job_post['url']
+            jobs.append(job)
+
+    return jobs
 
 ### Scrape Indeed.com ###
 ### Return Dict object ###

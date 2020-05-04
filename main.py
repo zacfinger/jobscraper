@@ -6,23 +6,33 @@
 import webscraper
 import send_email
 
+print("Executing ...")
+
 # Declare search parameters
 # For example:
 # query = 'web+developer'
 # location = 'San+Francisco%2C+CA'
-query = 'QA engineer'
+query = 'developer'
 location = '85719'
 
 jobs = []
 
-# jobs += webscraper.query_HN_jobs()
-webscraper.query_HN_jobs()
+try:
+    # Query jobs from Hacker News API
+    jobs += webscraper.query_HN_jobs()
 
-#jobs += webscraper.scrape_indeed(query, location)
-#send_email.send_job_report(jobs, query, location)
+    # Scrape jobs from first page of Indeed
+    jobs += webscraper.scrape_indeed(query, location)
 
-# eventually need to output to JSON file
-# https://realpython.com/python-json/#encoding-and-decoding-custom-python-objects
-# https://www.google.com/search?client=ubuntu&channel=fs&q=create+json+python3&ie=utf-8&oe=utf-8
+    # Send email report
+    send_email.send_job_report(jobs, query, location)
 
-print("\nSuccess")
+    # eventually need to output to JSON file
+    # https://realpython.com/python-json/#encoding-and-decoding-custom-python-objects
+    # https://www.google.com/search?client=ubuntu&channel=fs&q=create+json+python3&ie=utf-8&oe=utf-8
+
+    print("Success")
+
+except Exception as e:
+
+    print(str(type(e)) + " " + str(e) + " something error happens.")
