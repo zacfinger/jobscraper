@@ -17,8 +17,6 @@ def send_job_report(jobs, query, location):
 		html += job["title"] + "</a></strong>"
 		if(job["company"]):
 			html += "<ul><li><small>" + job["company"] + "</small></li></ul>"
-		else:
-			print(job["title"])
 		html += "</p><hr />"
 
 	# https://stackoverflow.com/questions/17759860/python-2-smtpserverdisconnected-connection-unexpectedly-closed/33121151

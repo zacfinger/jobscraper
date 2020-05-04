@@ -1,5 +1,28 @@
 import requests
+import json
 from bs4 import BeautifulSoup
+
+### API request to HN Jobs ###
+def query_HN_jobs():
+
+    job_ids = []
+
+    # https://www.digitalocean.com/community/tutorials/how-to-use-web-apis-in-python-3
+    # https://github.com/HackerNews/API
+    api_url = 'https://hacker-news.firebaseio.com/v0/jobstories.json'
+    headers = {'Content-Type': 'application/json'}
+
+    response = requests.get(api_url, headers=headers)
+
+    if response.status_code == 200:
+        job_ids = json.loads(response.content.decode('utf-8'))
+    else:
+        print(response.status_code)
+    
+    for id in job_ids:
+        print(id)
+
+    return []
 
 ### Scrape Indeed.com ###
 ### Return Dict object ###
