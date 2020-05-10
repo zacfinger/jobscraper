@@ -15,7 +15,7 @@ print("Executing ...")
 # query = 'web+developer'
 # location = 'San+Francisco%2C+CA'
 query = 'developer'
-location = '85719'
+location = 'Remote'
 
 jobs = []
 
