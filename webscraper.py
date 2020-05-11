@@ -71,6 +71,8 @@ def scrape_indeed(query, location):
 				job["company"] = companies[0].string
 			else:
 				job["company"] = span.string
+			
+			job["company"] = job["company"][1:]
 
 		jobs.append(job)
 

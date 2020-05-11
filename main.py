@@ -7,6 +7,7 @@ import webscraper
 import send_email
 import json
 import credentials
+import slackbot
 
 print("Executing ...")
 
@@ -21,7 +22,7 @@ jobs = []
 
 try:
     # Query jobs from Hacker News API
-    jobs += webscraper.query_HN_jobs()
+    # jobs += webscraper.query_HN_jobs()
 
     # Scrape jobs from first page of Indeed
     jobs += webscraper.scrape_indeed(query, location)
@@ -38,6 +39,20 @@ try:
     # https://www.google.com/search?client=ubuntu&channel=fs&q=python+append+to+json+file&ie=utf-8&oe=utf-8
     # https://www.geeksforgeeks.org/append-to-json-file-using-python/
     # https://kite.com/python/answers/how-to-append-to-a-json-file-in-python
+
+    count = 0
+
+    message = "Job posts today\n"
+
+    for job in jobs:
+        message += "\nCompany: " + job["company"]
+        message += "\nRole: " + job["title"]
+        message += "\n" + job["href"]
+        message += "\n"
+        
+        if count < 3:
+            slackbot.makePost(message)
+            count += 1
 
     print("Success")
 
