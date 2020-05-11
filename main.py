@@ -42,16 +42,9 @@ try:
 
     count = 0
 
-    message = "Job posts today\n"
-
     for job in jobs:
-        message += "\nCompany: " + job["company"]
-        message += "\nRole: " + job["title"]
-        message += "\n" + job["href"]
-        message += "\n"
-        
         if count < 3:
-            slackbot.makePost(message)
+            slackbot.postJob(job)
             count += 1
 
     print("Success")
