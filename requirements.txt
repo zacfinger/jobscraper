@@ -1,0 +1,5 @@
+bs4
+slackclient>=2.0.0
+slackeventsapi>=2.1.0 # https://stackoverflow.com/questions/53204916/what-is-the-meaning-of-failed-building-wheel-for-x-in-pip-install
+Flask>=1.1.1
+certifi

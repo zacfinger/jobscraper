@@ -4,3 +4,4 @@ __pycache__/
 credentials.py
 jobs.json
 .vscode
+env/
