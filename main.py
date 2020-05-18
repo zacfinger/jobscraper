@@ -8,6 +8,7 @@ import send_email
 import json
 import credentials
 import slackbot
+import rss_reader
 
 print("Executing ...")
 
@@ -27,6 +28,9 @@ try:
     # Scrape jobs from first page of Indeed
     jobs += webscraper.scrape_indeed(query, location)
 
+    # Read jobs from remoteok.io RSS feed
+    jobs += rss_reader.read_remoteok()
+    
     # Send email report
     # send_email.send_job_report(jobs, query, location)
 
