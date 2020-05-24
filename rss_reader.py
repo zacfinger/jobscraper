@@ -9,7 +9,6 @@ import sys
 def read_remoteok():
 
     url = 'https://remoteok.io/remote-jobs.rss'
-    #url = 'https://weworkremotely.com/categories/remote-programming-jobs.rss'
 
     feed = feedparser.parse(url)
     jobs = []
@@ -29,3 +28,31 @@ def read_remoteok():
         jobs.append(job)
     
     return jobs
+
+def read_weworkremotely():
+    url = 'https://weworkremotely.com/categories/remote-programming-jobs.rss'
+
+    feed = feedparser.parse(url)
+    jobs = []
+
+    for entry in feed.entries:
+        job = {}
+
+        if "title" in entry:
+
+            char_colon = entry.title.find(':')
+
+            if char_colon != -1:
+                job["company"] = entry.title[:char_colon]
+                job["title"] = entry.title[(char_colon+2):]
+            else:
+                job["title"] = entry.title
+        
+        if "link" in entry:
+            job["href"] = entry.link
+
+        jobs.append(job)
+
+    return jobs
+
+read_remoteok()
