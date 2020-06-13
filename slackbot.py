@@ -4,8 +4,10 @@
 from slack import WebClient
 import credentials
 
+client = WebClient(credentials.slack_bot_token, timeout=30)
+
 def makeTextPost(message):
-    client = WebClient(credentials.slack_bot_token, timeout=30)
+    
     client.api_call('chat.postMessage', json={
         'channel': 'general',
         'text': message})
@@ -16,16 +18,18 @@ def makeTextPost(message):
     #   text='Hi!')
 
 def postJob(job):
-    client = WebClient(credentials.slack_bot_token, timeout=30)
-    client.api_call('chat.postMessage', json={
-        'channel': 'general',
-        'blocks': [
-                {
-                    "type": "section",
-                    "text": {
-        "type": "mrkdwn",
-        "text": ":star: " + job["company"] + " <" + job["href"] + "|" + job["title"] + ">:star:"
-                            }
-                }
-        ]
-    })
+
+    if "company" in job and "href" in job and "title" in job:
+    
+        client.api_call('chat.postMessage', json={
+            'channel': 'general',
+            'blocks': [
+                    {
+                        "type": "section",
+                        "text": {
+            "type": "mrkdwn",
+            "text": ":star: " + job["company"] + " <" + job["href"] + "|" + job["title"] + ">:star:"
+                                }
+                    }
+            ]
+        })
