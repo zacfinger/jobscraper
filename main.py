@@ -6,9 +6,20 @@
 import webscraper
 import send_email
 import json
-import credentials
+import jobscraper_credentials
 import slackbot
 import rss_reader
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+# Use the application default credentials
+cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred, {
+  'projectId': jobscraper_credentials.project_id,
+})
+
+db = firestore.client()
 
 print("Executing ...")
 
@@ -23,20 +34,23 @@ jobs = []
 
 try:
     # Query jobs from Hacker News API
-    # jobs += webscraper.query_HN_jobs()
+    jobs += webscraper.query_HN_jobs()
 
     # Scrape jobs from first page of Indeed
     jobs += webscraper.scrape_indeed(query, location)
 
     # Read jobs from remoteok.io RSS feed
     jobs += rss_reader.read_remoteok()
+
+    # Read jobs from weworkremotely.com
+    jobs += rss_reader.read_weworkremotely()
     
     # Send email report
     # send_email.send_job_report(jobs, query, location)
 
     # Save local JSON data file
     # https://realpython.com/python-json/#encoding-and-decoding-custom-python-objects
-    with open(credentials.json_path + "jobs.json", "w") as write_file:
+    with open(jobscraper_credentials.json_path + "jobs.json", "w") as write_file:
         json.dump(jobs, write_file)
 
     # Eventually need to append to JSON file 
@@ -48,7 +62,7 @@ try:
 
     for job in jobs:
         if count < 3:
-            slackbot.postJob(job)
+            #slackbot.postJob(job)
             count += 1
 
     print("Success")

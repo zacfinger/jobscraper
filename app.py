@@ -7,6 +7,12 @@
 # https://stackoverflow.com/questions/46463199/no-such-file-or-directory-mod-wsgi-unable-to-connect-to-wsgi-daemon-process
 # https://flask.palletsprojects.com/en/1.1.x/deploying/mod_wsgi/
 
+##############################
+# deploy flask app to firebase
+# https://www.youtube.com/watch?v=t5EfITuFD9w
+# https://medium.com/google-cloud/building-a-flask-python-crud-api-with-cloud-firestore-firebase-and-deploying-on-cloud-run-29a10c502877
+# https://medium.com/firebase-developers/hosting-flask-servers-on-firebase-from-scratch-c97cfb204579
+
 # import os
 import logging
 from flask import Flask
@@ -15,14 +21,14 @@ from slackeventsapi import SlackEventAdapter
 import ssl as ssl_lib
 import certifi
 #from onboarding_tutorial import OnboardingTutorial
-import credentials
+import jobscraper_credentials
 
 # Initialize a Flask app to host the events adapter
 app = Flask(__name__)
-slack_events_adapter = SlackEventAdapter(credentials.signing_secret, "/slack/events", app)
+slack_events_adapter = SlackEventAdapter(jobscraper_credentials.signing_secret, "/slack/events", app)
 
 # Initialize a Web API client
-slack_web_client = WebClient(token=credentials.slack_bot_token)
+slack_web_client = WebClient(token=jobscraper_credentials.slack_bot_token)
 
 #{"channel": {"user_id": OnboardingTutorial}}
 

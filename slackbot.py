@@ -2,9 +2,9 @@
 # https://stackoverflow.com/questions/44048855/slack-bot-scope-missing-while-making-api-request
 
 from slack import WebClient
-import credentials
+import jobscraper_credentials
 
-client = WebClient(credentials.slack_bot_token, timeout=30)
+client = WebClient(jobscraper_credentials.slack_bot_token, timeout=30)
 
 def makeTextPost(message):
     

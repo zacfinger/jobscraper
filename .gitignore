@@ -1,7 +1,8 @@
 .idea
 *.pyc
 __pycache__/
-credentials.py
+jobscraper_credentials.py
+Decentralized Devs-55c4a4ed13af.json
 jobs.json
 .vscode
 env/

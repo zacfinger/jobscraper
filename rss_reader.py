@@ -1,6 +1,18 @@
 # https://alvinalexander.com/python/python-script-read-rss-feeds-database/
 # https://wiki.python.org/moin/RssLibraries
 
+"""
+RSS Feeds
+Remote OK:
+https://remoteok.io/remote-jobs.rss
+We Work Remotely
+(Programming Feed)
+https://weworkremotely.com/categories/remote-programming-jobs.rss
+We Work Remotely
+(Devops and System Admin feed)
+https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss
+"""
+
 import feedparser
 import time
 from subprocess import check_output

@@ -1,4 +1,4 @@
-import credentials
+import jobscraper_credentials
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -23,8 +23,8 @@ def send_job_report(jobs, query, location):
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')
 	msg['Subject'] = "Daily Job Report: " + query + ", " + location
-	msg['From'] = credentials.recipient
-	msg['To'] = credentials.sender
+	msg['From'] = jobscraper_credentials.recipient
+	msg['To'] = jobscraper_credentials.sender
 
 	# Create the body of the message (a plain-text and an HTML version).
 	#html = soup
@@ -44,9 +44,9 @@ def send_job_report(jobs, query, location):
 	s.ehlo()
 
 	# do the smtp auth; sends ehlo if it hasn't been sent already
-	s.login(credentials.sender, credentials.password)
+	s.login(jobscraper_credentials.sender, jobscraper_credentials.password)
 
 	# sendmail function takes 3 arguments: sender's address, recipient's address
 	# and message to send - here it is sent as one string.
-	s.sendmail(credentials.sender, credentials.recipient, msg.as_string())
+	s.sendmail(jobscraper_credentials.sender, jobscraper_credentials.recipient, msg.as_string())
 	s.quit()
