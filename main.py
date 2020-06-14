@@ -61,16 +61,13 @@ try:
     count = 0
 
     for job in jobs:
-        if count < 3:
-            #slackbot.postJob(job)
-            count += 1
-    
-    doc_ref = db.collection(u'jobs').document(u'test_data')
-    doc_ref.set({
-        u'company': u'Test Company 2020-06-13',
-        u'title': u'Test Title 2020-06-13',
-        u'href': 'https://google.com'
-    })
+        
+        doc_ref = db.collection(u'jobs').document()
+        doc_ref.set({
+            u'company': u''+job["company"],
+            u'title': u''+job["title"],
+            u'href': u''+job["href"]
+        })
 
     print("Success")
 
