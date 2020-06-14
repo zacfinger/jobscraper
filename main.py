@@ -13,8 +13,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-# Use the application default credentials
-cred = credentials.ApplicationDefault()
+# Use a service account
+cred = credentials.Certificate(jobscraper_credentials.serviceAccount_json)
 firebase_admin.initialize_app(cred, {
   'projectId': jobscraper_credentials.project_id,
 })
@@ -64,6 +64,13 @@ try:
         if count < 3:
             #slackbot.postJob(job)
             count += 1
+    
+    doc_ref = db.collection(u'jobs').document(u'test_data')
+    doc_ref.set({
+        u'company': u'Test Company 2020-06-13',
+        u'title': u'Test Title 2020-06-13',
+        u'href': 'https://google.com'
+    })
 
     print("Success")
 
